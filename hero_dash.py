@@ -12,34 +12,78 @@ import researchpy as rp
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 
-# Navigation Bar that will act as our header
+# Some CSS
 
-navbar = dbc.NavbarSimple(
-    children = [
-        dbc.NavItem(dbc.NavLink('GitHub', href = 'https://github.com/mbururyan')),
-    ],
+SIDEBAR_STYLE = {
+    "position": "fixed",
+    "top": 0,
+    "left": 0,
+    "bottom": 0,
+    "width": "15rem",
+    "padding": "2rem 1rem",
+    "background-color": '#BFCDD9',
+}
 
-    brand = 'STAR WARS',
-    color = 'Primary',
-    dark = True
+CONTENT_STYLE = {
+    'margin-left' : '18rem',
+    'margin-right' : '2rem',
+    'padding' : '2rem 2 rem',
+}
 
+# Sidebar Bar that will ask the user whether he/she will use a hero or a villain
+sidebar = html.Div(
+    [
+        html.H3('Choose your Faction : '),
+
+        dbc.Nav(
+            [
+                dbc.NavLink('LightSide', href = '/', active = 'extact'),
+                dbc.NavLink('DarkSide', href = '/page-1', active = 'extact'),
+            ],
+            pills = True,
+            vertical = True
+        )
+    ], style = SIDEBAR_STYLE,
 )
 
-navbar2 = html.Nav(
-    className = 'nav',
-    children = [
-        html.A('STAR WARS')
-    ],
+# Website layout
+
+content = html.Div(
+    id = 'LightSide',
+    children = [],
+    style = CONTENT_STYLE
 )
-
-
 
 
 app.layout = html.Div(
-    children = [
-        navbar2
+    [
+        dcc.Location(id = 'url'),
+        sidebar,
+        content
+    ]
+
+)
+
+# Callbacks
+
+# Sidebar Callback
+
+@app.callback(
+    Output('LightSide', 'children'),
+    [
+        Input('url', 'pathname')
     ]
 )
+
+def page_switcher(pathname):
+    if pathname == '/':
+        return[
+            html.H1('CHOOSE YOUR LS HERO')
+        ]
+    else:
+        return[
+            html.H1('CHOOSE YOUR DS VILLAIN')
+        ]
 
 
 
